@@ -33,6 +33,7 @@ func main() {
 	}
 
 	messenger.MessageReceived = suchefServer.BindMessageReceived()
+	messenger.Postback = suchefServer.BindPostbackReceived()
 
 	http.HandleFunc("/webhook", messenger.Handler)
 	http.ListenAndServe(":" + os.Getenv("PORT"), nil)

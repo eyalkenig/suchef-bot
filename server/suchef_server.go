@@ -29,4 +29,16 @@ func (suchefServer *SuchefServer) BindMessageReceived() messenger.MessageReceive
 	}
 }
 
+func (suchefServer *SuchefServer) BindPostbackReceived() messenger.PostbackHandler{
+	return func (event messenger.Event, opts messenger.MessageOpts, postback messenger.Postback) {
+		fakeMid := fmt.Sprintf("postback_%d", event.ID)
+		postbackMessage := messenger.ReceivedMessage{ID: fakeMid, Text: postback.Payload, Seq: -1}
+		err := suchefServer.controller.Handle(suchefServer.accountID, event, opts, postbackMessage)
+		if err != nil {
+			fmt.Println("error handling postback: " + err.Error())
+		}
+		fmt.Println("handled posback: " + postback.Payload)
+	}
+}
+
 
