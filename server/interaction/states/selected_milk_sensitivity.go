@@ -32,5 +32,5 @@ func (state *SelectedMilkSensitivity) Next(input IStateInput) (nextState IState,
 }
 
 func (state *SelectedMilkSensitivity) GetNextStage() (IState, error) {
-	return nil, nil
+	return state.stateFactory.GetState(SELECT_THEME_STATE_ID)
 }

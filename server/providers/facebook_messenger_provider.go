@@ -30,3 +30,13 @@ func (messengerProvider *FacebookMessengerProvider) SendQuickReplyMessage(extern
 	_, err = messengerProvider.messengerClient.SendMessage(messageQuery)
 	return err
 }
+
+func (messengerProvider *FacebookMessengerProvider) SendImage(externalUserID, imageURL string) (err error){
+	recipient := messenger.Recipient{ID: externalUserID}
+	message := messenger.SendMessage{}
+	messageQuery := messenger.MessageQuery{Recipient: recipient, Message: message}
+
+	messageQuery.Image(imageURL)
+	_, err = messengerProvider.messengerClient.SendMessage(messageQuery)
+	return err
+}

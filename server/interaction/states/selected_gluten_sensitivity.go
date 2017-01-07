@@ -38,5 +38,5 @@ func (state *SelectedGlutenSensitivity) Next(input IStateInput) (nextState IStat
 }
 
 func (state *SelectedGlutenSensitivity) GetNextStage() (IState, error) {
-	return nil, nil
+	return state.stateFactory.GetState(SELECT_THEME_STATE_ID)
 }

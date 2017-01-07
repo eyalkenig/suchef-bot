@@ -35,6 +35,6 @@ func (state *DidNotSelectedSensitivity) Next(input IStateInput) (nextState IStat
 }
 
 func (state *DidNotSelectedSensitivity) GetNextStage() (IState, error) {
-	return nil, nil
+	return state.stateFactory.GetState(SELECT_THEME_STATE_ID)
 }
 
