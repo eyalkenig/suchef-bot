@@ -71,6 +71,23 @@ func (controller *StateMachineController) Handle(message messenger.ReceivedMessa
 		if (err != nil) {
 			return err
 		}
+
+		nextStage, err := nextState.GetNextStage()
+		if (err != nil) {
+			return err
+		}
+
+		if nextStage != nil {
+			err = nextStage.Act()
+			if (err != nil){
+				return err
+			}
+
+			err = controller.stateDataProvider.SetCurrentState(userID, nextStage.ID())
+			if (err != nil) {
+				return err
+			}
+		}
 	}
 	return nil
 }

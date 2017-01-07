@@ -34,3 +34,7 @@ func (state *DidNotSelectedDiet) Next(input IStateInput) (nextState IState, err 
 	return nil, nil
 }
 
+func (state *DidNotSelectedDiet) GetNextStage() (IState, error) {
+	return state.stateFactory.GetState(SELECT_SENSITIVITY_STATE_ID)
+}
+

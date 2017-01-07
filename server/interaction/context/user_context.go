@@ -26,6 +26,10 @@ func (context *UserContext) IsMale() bool {
 	return context.user.Gender == "male"
 }
 
-func (context *UserContext) SetDiet(dietID int64) error{
+func (context *UserContext) SetDiet(dietID int64) error {
 	return context.dbProvider.SetUserDiet(context.user.ID, dietID)
+}
+
+func (context *UserContext) SetSensitivity(sensitivityID int64) error {
+	return context.dbProvider.SetSensitivity(context.user.ID, sensitivityID)
 }

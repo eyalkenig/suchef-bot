@@ -28,6 +28,12 @@ func (inputFactory *StateInputFactory) CastMessageToInput(message messenger.Rece
 		input = NewDietVegan()
 	case DIET_VEGETARIAN_INPUT:
 		input = NewDietVegetarian()
+	case GLUTEN_SENSITIVITY_INPUT:
+		input = NewSensitivityGluten()
+	case MILK_SENSITIVITY_INPUT:
+		input = NewSensitivityMilk()
+	case NO_SENSITIVITY_INPUT:
+		input = NewSensitivityNo()
 	}
 
 	if input == nil {
