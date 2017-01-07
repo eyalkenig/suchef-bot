@@ -43,6 +43,18 @@ func (stateFactory *StateFactory) GetState(stateID int64) (state IState, err err
 		return NewSelectedNoSensitivity(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
 	case DID_NOT_SELECTED_SENSITIVITY_STATE_ID:
 		return NewDidNotSelectedSensitivity(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECT_THEME_STATE_ID:
+		return NewSelectFoodTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECT_THEME_OR_NOT_STATE_ID:
+		return NewSelectFoodThemeOrNot(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECTED_ASIAN_THEME_STATE_ID:
+		return NewSelectedAsianTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECTED_MOROCCAN_THEME_STATE_ID:
+		return NewSelectedMoroccanTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECTED_MOROCCASIAN_THEME_STATE_ID:
+		return NewSelectedMoroccasianTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case DID_NOT_SELECTED_THEME_STATE_ID:
+		return NewDidNotSelectedTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
 	}
 	return nil, errors.New(fmt.Sprintf("Invalid state id: %d", stateID))
 }

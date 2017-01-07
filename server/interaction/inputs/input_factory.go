@@ -34,6 +34,12 @@ func (inputFactory *StateInputFactory) CastMessageToInput(message messenger.Rece
 		input = NewSensitivityMilk()
 	case NO_SENSITIVITY_INPUT:
 		input = NewSensitivityNo()
+	case THEME_ASIAN_INPUT:
+		input = NewThemeAsian()
+	case THEME_MOROCCAN_INPUT:
+		input = NewThemeMoroccan()
+	case THEME_MOROCCASIAN_INPUT:
+		input = NewThemeMoroccasian()
 	}
 
 	if input == nil {
