@@ -5,18 +5,36 @@ import (
 	"github.com/eyalkenig/suchef-bot/server"
 
 	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
+	"os"
+	"github.com/eyalkenig/suchef-bot/server/providers"
+	"fmt"
 )
 
 func main() {
 	messenger := &messenger.Messenger{
-		VerifyToken: "MY_VERIFY_TOKEN_SUCHEF",
-		AppSecret: "2a551675367ec29d3cb5e043aa6f546c",
-		AccessToken: "EAAVpMZASa6N8BAC3pH0I8oNLvNDGtZAgUT5CTdj37dSDhQgZAfhJGcZBQPiILqYzXZAWPQbpMkbiQmZBlfqPasmIWqQEW8qQz6zHTnmtuDBOac7QqDkqhpvZAkDnXgQkF1ZAa83TdyaOoduZAdFZBEg9RBJWMwhgFECBUL9aiInNTFQQZDZD",
+		VerifyToken: os.Getenv("VERIFY_TOKEN"),
+		AppSecret: os.Getenv("APP_SECRET"),
+		AccessToken: os.Getenv("PAGE_ACCESS_KEY"),
 	}
 
-	suchefServer := server.NewSuchefServer(messenger)
+	dbConnectionParams := providers.DBConnectionParams{
+		User: os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASS"),
+		Address: os.Getenv("DB_ADDRESS"),
+		DBName: os.Getenv("DB_NAME"),
+	}
+
+	accountID := int64(1)
+
+	suchefServer, err := server.NewSuchefServer(accountID, messenger, dbConnectionParams)
+
+	if err != nil {
+		fmt.Println("could not create suchef server. error: " + err.Error())
+	}
+
 	messenger.MessageReceived = suchefServer.BindMessageReceived()
+	messenger.Postback = suchefServer.BindPostbackReceived()
 
 	http.HandleFunc("/webhook", messenger.Handler)
-	http.ListenAndServe(":3987", nil)
+	http.ListenAndServe(":" + os.Getenv("PORT"), nil)
 }
