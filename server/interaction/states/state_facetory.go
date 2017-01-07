@@ -31,6 +31,18 @@ func (stateFactory *StateFactory) GetState(stateID int64) (state IState, err err
 		return NewSelectedVegetarianDiet(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
 	case DID_NOT_SELECTED_DIET_STATE_ID:
 		return NewDidNotSelectedDiet(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECT_SENSITIVITY_STATE_ID:
+		return NewSelectSensitivity(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECT_SENSITIVITY_OR_NOT_STATE_ID:
+		return NewSelectSensitivityOrNot(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECTED_GLUTEN_SENSITIVITY_STATE_ID:
+		return NewSelectedGlutenSensitivity(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECTED_MILK_SENSITIVITY_STATE_ID:
+		return NewSelectedMilkSensitivity(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case SELECTED_NO_SENSITIVITY_STATE_ID:
+		return NewSelectedNoSensitivity(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+	case DID_NOT_SELECTED_SENSITIVITY_STATE_ID:
+		return NewDidNotSelectedSensitivity(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
 	}
 	return nil, errors.New(fmt.Sprintf("Invalid state id: %d", stateID))
 }

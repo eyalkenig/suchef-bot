@@ -44,9 +44,15 @@ func (state *SelectDietOrNot) Next(input IStateInput) (nextState IState, err err
 		nextStateID = SELECTED_VEGAN_DIET_STATE_ID
 	case DIET_VEGETARIAN_INPUT:
 		nextStateID = SELECTED_VEGETARIAN_DIET_STATE_ID
-	default:
+	case FREE_TEXT_INPUT:
 		nextStateID = DID_NOT_SELECTED_DIET_STATE_ID
+	default:
+		return nil, nil
 	}
 
 	return state.stateFactory.GetState(nextStateID)
+}
+
+func (state *SelectDietOrNot) GetNextStage() (IState, error) {
+	return nil, nil
 }

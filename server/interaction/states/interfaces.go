@@ -7,6 +7,7 @@ import(
 type IState interface{
 	Act() (err error)
 	Next(input IStateInput) (nextState IState, err error)
+	GetNextStage() (IState, error)
 	ID() int64
 }
 

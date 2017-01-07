@@ -37,3 +37,6 @@ func (state *SelectedVeganDiet) Next(input IStateInput) (nextState IState, err e
 	return nil, nil
 }
 
+func (state *SelectedVeganDiet) GetNextStage() (IState, error) {
+	return state.stateFactory.GetState(SELECT_SENSITIVITY_STATE_ID)
+}
