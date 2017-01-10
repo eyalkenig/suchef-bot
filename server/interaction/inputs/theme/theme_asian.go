@@ -1,4 +1,4 @@
-package inputs
+package theme
 
 type ThemeAsian struct{}
 

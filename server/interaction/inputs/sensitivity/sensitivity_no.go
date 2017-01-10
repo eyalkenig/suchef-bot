@@ -1,4 +1,4 @@
-package inputs
+package sensitivity
 
 type SensitivityNo struct{}
 

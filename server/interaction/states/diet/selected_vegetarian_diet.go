@@ -40,5 +40,5 @@ func (state *SelectedVegetarianDiet) Next(input interfaces.IStateInput) (nextSta
 }
 
 func (state *SelectedVegetarianDiet) GetNextStage() (interfaces.IState, error) {
-	return state.stateFactory.GetState( sensitivity.SELECT_SENSITIVITY_STATE_ID)
+	return state.stateFactory.GetState(sensitivity.SELECT_SENSITIVITY_STATE_ID)
 }

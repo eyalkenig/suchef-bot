@@ -5,6 +5,7 @@ import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
 	"github.com/eyalkenig/suchef-bot/server/providers"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
+	"github.com/eyalkenig/suchef-bot/server/interaction/inputs/theme"
 )
 
 type SelectFoodTheme struct {
@@ -33,9 +34,9 @@ func (state *SelectFoodTheme) Act() (err error) {
 	}
 
 	quickReplies := make(map[string]string)
-	quickReplies[inputs.THEME_ASIAN_TITLE] = inputs.THEME_ASIAN_INPUT
-	quickReplies[inputs.THEME_MOROCCAN_TITLE] = inputs.THEME_MOROCCAN_INPUT
-	quickReplies[inputs.THEME_MOROCCASIAN_TITLE] = inputs.THEME_MOROCCASIAN_INPUT
+	quickReplies[theme.THEME_ASIAN_TITLE] = theme.THEME_ASIAN_INPUT
+	quickReplies[theme.THEME_MOROCCAN_TITLE] = theme.THEME_MOROCCAN_INPUT
+	quickReplies[theme.THEME_MOROCCASIAN_TITLE] = theme.THEME_MOROCCASIAN_INPUT
 	text = "איזה סגנון אוכל מתחשק לך כעת?"
 
 	return state.messengerProvider.SendQuickReplyMessage(externalUserID, text, quickReplies)
@@ -45,11 +46,11 @@ func (state *SelectFoodTheme) Next(input interfaces.IStateInput) (nextState inte
 	payload := input.Payload()
 	var nextStateID int64
 	switch payload {
-	case inputs.THEME_ASIAN_INPUT:
+	case theme.THEME_ASIAN_INPUT:
 		nextStateID = SELECTED_ASIAN_THEME_STATE_ID
-	case inputs.THEME_MOROCCAN_INPUT:
+	case theme.THEME_MOROCCAN_INPUT:
 		nextStateID = SELECTED_MOROCCAN_THEME_STATE_ID
-	case inputs.THEME_MOROCCASIAN_INPUT:
+	case theme.THEME_MOROCCASIAN_INPUT:
 		nextStateID = SELECTED_MOROCCASIAN_THEME_STATE_ID
 	case inputs.FREE_TEXT_INPUT:
 		nextStateID = SELECT_THEME_OR_NOT_STATE_ID

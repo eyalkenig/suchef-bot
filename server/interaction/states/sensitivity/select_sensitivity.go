@@ -5,6 +5,7 @@ import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interaction/inputs/sensitivity"
 )
 
 type SelectSensitivity struct {
@@ -27,9 +28,9 @@ func (state *SelectSensitivity) Act() (err error) {
 	externalUserID := state.userContext.GetExternalUserID()
 
 	quickReplies := make(map[string]string)
-	quickReplies[inputs.NO_SENSITIVITY_TITLE] = inputs.NO_SENSITIVITY_INPUT
-	quickReplies[inputs.GLUTEN_SENSITIVITY_TITLE] = inputs.GLUTEN_SENSITIVITY_INPUT
-	quickReplies[inputs.MILK_SENSITIVITY_TITLE] = inputs.MILK_SENSITIVITY_INPUT
+	quickReplies[sensitivity.NO_SENSITIVITY_TITLE] = sensitivity.NO_SENSITIVITY_INPUT
+	quickReplies[sensitivity.GLUTEN_SENSITIVITY_TITLE] = sensitivity.GLUTEN_SENSITIVITY_INPUT
+	quickReplies[sensitivity.MILK_SENSITIVITY_TITLE] = sensitivity.MILK_SENSITIVITY_INPUT
 	text := "אתה רגיש למשהו?"
 	if !state.userContext.IsMale() {
 		text = "את רגישה למשהו?"
@@ -42,11 +43,11 @@ func (state *SelectSensitivity) Next(input interfaces.IStateInput) (nextState in
 	payload := input.Payload()
 	var nextStateID int64
 	switch payload {
-	case inputs.NO_SENSITIVITY_INPUT:
+	case sensitivity.NO_SENSITIVITY_INPUT:
 		nextStateID = SELECTED_NO_SENSITIVITY_STATE_ID
-	case inputs.GLUTEN_SENSITIVITY_INPUT:
+	case sensitivity.GLUTEN_SENSITIVITY_INPUT:
 		nextStateID = SELECTED_GLUTEN_SENSITIVITY_STATE_ID
-	case inputs.MILK_SENSITIVITY_INPUT:
+	case sensitivity.MILK_SENSITIVITY_INPUT:
 		nextStateID = SELECTED_MILK_SENSITIVITY_STATE_ID
 	case inputs.FREE_TEXT_INPUT:
 		nextStateID = SELECT_SENSITIVITY_OR_NOT_STATE_ID

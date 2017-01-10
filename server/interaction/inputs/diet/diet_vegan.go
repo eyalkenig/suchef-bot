@@ -1,4 +1,4 @@
-package inputs
+package diet
 
 type DietVegan struct{}
 

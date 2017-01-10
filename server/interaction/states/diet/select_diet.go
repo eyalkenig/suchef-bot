@@ -1,9 +1,10 @@
 package diet
 
 import (
+	"github.com/eyalkenig/suchef-bot/server/providers"
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
 	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interaction/inputs/diet"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 )
 
@@ -31,9 +32,9 @@ func (state *SelectDiet) Act() (err error) {
 	}
 
 	quickReplies := make(map[string]string)
-	quickReplies[inputs.DIET_VEGAN_TITLE] = inputs.DIET_VEGAN_INPUT
-	quickReplies[inputs.DIET_VEGETARIAN_TITLE] = inputs.DIET_VEGETARIAN_INPUT
-	quickReplies[inputs.DIET_ANYTHING_TITLE] = inputs.DIET_ANYTHING_INPUT
+	quickReplies[diet.DIET_VEGAN_TITLE] = diet.DIET_VEGAN_INPUT
+	quickReplies[diet.DIET_VEGETARIAN_TITLE] = diet.DIET_VEGETARIAN_INPUT
+	quickReplies[diet.DIET_ANYTHING_TITLE] = diet.DIET_ANYTHING_INPUT
 	text := "אז.. מה אתה?"
 	if !state.userContext.IsMale() {
 		text = "אז.. מה את?"
@@ -46,11 +47,11 @@ func (state *SelectDiet) Next(input interfaces.IStateInput) (nextState interface
 	payload := input.Payload()
 	var nextStateID int64
 	switch payload {
-	case inputs.DIET_ANYTHING_INPUT:
+	case diet.DIET_ANYTHING_INPUT:
 		nextStateID = SELECTED_ANYTHING_DIET_STATE_ID
-	case inputs.DIET_VEGAN_INPUT:
+	case diet.DIET_VEGAN_INPUT:
 		nextStateID = SELECTED_VEGAN_DIET_STATE_ID
-	case inputs.DIET_VEGETARIAN_INPUT:
+	case diet.DIET_VEGETARIAN_INPUT:
 		nextStateID = SELECTED_VEGETARIAN_DIET_STATE_ID
 	case inputs.FREE_TEXT_INPUT:
 		nextStateID = SELECT_DIET_OR_NOT_STATE_ID
