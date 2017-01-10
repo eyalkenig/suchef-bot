@@ -1,14 +1,14 @@
 package inputs
 
-type SensitivityGluten struct {}
+type SensitivityGluten struct{}
 
-func NewSensitivityGluten() *SensitivityGluten{
+func NewSensitivityGluten() *SensitivityGluten {
 	return &SensitivityGluten{}
 }
 
 const GLUTEN_SENSITIVITY_INPUT = "gluten-sensitive"
 const GLUTEN_SENSITIVITY_TITLE = "גלוטן 🍞"
 
-func (diet *SensitivityGluten) Payload() string{
+func (diet *SensitivityGluten) Payload() string {
 	return GLUTEN_SENSITIVITY_INPUT
 }

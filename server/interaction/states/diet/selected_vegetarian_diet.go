@@ -1,21 +1,22 @@
-package states
+package diet
 
-import(
-	. "github.com/eyalkenig/suchef-bot/server/interaction/inputs"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
+	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
+	"github.com/eyalkenig/suchef-bot/server/interaction/states/sensitivity"
 )
 
-type SelectedVegetarianDiet struct{
+type SelectedVegetarianDiet struct {
 	messengerProvider providers.IMessengerProvider
-	userContext context.IUserContext
-	stateFactory IStateFactory
+	userContext       context.IUserContext
+	stateFactory      interfaces.IStateFactory
 }
 
 const SELECTED_VEGETARIAN_DIET_STATE_ID = 18
 const VEGETARIAN_DIET_TYPE_ID = 20
 
-func NewSelectedVegetarianDiet(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory IStateFactory) *SelectedVegetarianDiet {
+func NewSelectedVegetarianDiet(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory interfaces.IStateFactory) *SelectedVegetarianDiet {
 	return &SelectedVegetarianDiet{userContext: userContext, messengerProvider: messengerProvider, stateFactory: stateFactory}
 }
 
@@ -34,10 +35,10 @@ func (state *SelectedVegetarianDiet) Act() (err error) {
 	return state.messengerProvider.SendSimpleMessage(externalUserID, message)
 }
 
-func (state *SelectedVegetarianDiet) Next(input IStateInput) (nextState IState, err error) {
+func (state *SelectedVegetarianDiet) Next(input interfaces.IStateInput) (nextState interfaces.IState, err error) {
 	return nil, nil
 }
 
-func (state *SelectedVegetarianDiet) GetNextStage() (IState, error) {
-	return state.stateFactory.GetState(SELECT_SENSITIVITY_STATE_ID)
+func (state *SelectedVegetarianDiet) GetNextStage() (interfaces.IState, error) {
+	return state.stateFactory.GetState( sensitivity.SELECT_SENSITIVITY_STATE_ID)
 }

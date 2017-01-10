@@ -1,20 +1,21 @@
-package states
+package theme
 
-import(
-	. "github.com/eyalkenig/suchef-bot/server/interaction/inputs"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
+	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
+	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 )
 
-type SelectFoodTheme struct{
+type SelectFoodTheme struct {
 	messengerProvider providers.IMessengerProvider
-	userContext context.IUserContext
-	stateFactory IStateFactory
+	userContext       context.IUserContext
+	stateFactory      interfaces.IStateFactory
 }
 
 const SELECT_THEME_STATE_ID = 30
 
-func NewSelectFoodTheme(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory IStateFactory) *SelectFoodTheme {
+func NewSelectFoodTheme(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory interfaces.IStateFactory) *SelectFoodTheme {
 	return &SelectFoodTheme{userContext: userContext, messengerProvider: messengerProvider, stateFactory: stateFactory}
 }
 
@@ -32,25 +33,25 @@ func (state *SelectFoodTheme) Act() (err error) {
 	}
 
 	quickReplies := make(map[string]string)
-	quickReplies[THEME_ASIAN_TITLE] = THEME_ASIAN_INPUT
-	quickReplies[THEME_MOROCCAN_TITLE] = THEME_MOROCCAN_INPUT
-	quickReplies[THEME_MOROCCASIAN_TITLE] = THEME_MOROCCASIAN_INPUT
+	quickReplies[inputs.THEME_ASIAN_TITLE] = inputs.THEME_ASIAN_INPUT
+	quickReplies[inputs.THEME_MOROCCAN_TITLE] = inputs.THEME_MOROCCAN_INPUT
+	quickReplies[inputs.THEME_MOROCCASIAN_TITLE] = inputs.THEME_MOROCCASIAN_INPUT
 	text = "איזה סגנון אוכל מתחשק לך כעת?"
 
 	return state.messengerProvider.SendQuickReplyMessage(externalUserID, text, quickReplies)
 }
 
-func (state *SelectFoodTheme) Next(input IStateInput) (nextState IState, err error) {
+func (state *SelectFoodTheme) Next(input interfaces.IStateInput) (nextState interfaces.IState, err error) {
 	payload := input.Payload()
 	var nextStateID int64
 	switch payload {
-	case THEME_ASIAN_INPUT:
+	case inputs.THEME_ASIAN_INPUT:
 		nextStateID = SELECTED_ASIAN_THEME_STATE_ID
-	case THEME_MOROCCAN_INPUT:
+	case inputs.THEME_MOROCCAN_INPUT:
 		nextStateID = SELECTED_MOROCCAN_THEME_STATE_ID
-	case THEME_MOROCCASIAN_INPUT:
+	case inputs.THEME_MOROCCASIAN_INPUT:
 		nextStateID = SELECTED_MOROCCASIAN_THEME_STATE_ID
-	case FREE_TEXT_INPUT:
+	case inputs.FREE_TEXT_INPUT:
 		nextStateID = SELECT_THEME_OR_NOT_STATE_ID
 	default:
 		return nil, nil
@@ -59,6 +60,6 @@ func (state *SelectFoodTheme) Next(input IStateInput) (nextState IState, err err
 	return state.stateFactory.GetState(nextStateID)
 }
 
-func (state *SelectFoodTheme) GetNextStage() (IState, error) {
-	return nil,nil
+func (state *SelectFoodTheme) GetNextStage() (interfaces.IState, error) {
+	return nil, nil
 }

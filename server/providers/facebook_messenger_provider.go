@@ -1,6 +1,7 @@
 package providers
 
 import (
+	"github.com/maciekmm/messenger-platform-go-sdk/template"
 	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
 )
 
@@ -17,7 +18,7 @@ func (messengerProvider *FacebookMessengerProvider) SendSimpleMessage(externalUs
 	return err
 }
 
-func (messengerProvider *FacebookMessengerProvider) SendQuickReplyMessage(externalUserID, text string, quickReplies map[string]string) (err error){
+func (messengerProvider *FacebookMessengerProvider) SendQuickReplyMessage(externalUserID, text string, quickReplies map[string]string) (err error) {
 	recipient := messenger.Recipient{ID: externalUserID}
 	message := messenger.SendMessage{Text: text}
 	messageQuery := messenger.MessageQuery{Recipient: recipient, Message: message}
@@ -31,12 +32,33 @@ func (messengerProvider *FacebookMessengerProvider) SendQuickReplyMessage(extern
 	return err
 }
 
-func (messengerProvider *FacebookMessengerProvider) SendImage(externalUserID, imageURL string) (err error){
+func (messengerProvider *FacebookMessengerProvider) SendImage(externalUserID, imageURL string) (err error) {
 	recipient := messenger.Recipient{ID: externalUserID}
 	message := messenger.SendMessage{}
 	messageQuery := messenger.MessageQuery{Recipient: recipient, Message: message}
 
 	messageQuery.Image(imageURL)
+	_, err = messengerProvider.messengerClient.SendMessage(messageQuery)
+	return err
+}
+
+func (messengerProvider *FacebookMessengerProvider) SendGenericTemplate(externalUserID string, titleToPhotoURL map[string]string) (err error) {
+	messageQuery := messenger.MessageQuery{}
+	messageQuery.RecipientID(externalUserID)
+
+	for title, photoURL := range titleToPhotoURL {
+		messageQuery.Template(template.GenericTemplate{Title: title,
+			ImageURL: photoURL,
+			Buttons: []template.Button{
+				{
+					Type:    template.ButtonTypePostback,
+					Payload: "test_" + title,
+					Title:   "מרכיבים",
+				},
+			},
+		})
+	}
+
 	_, err = messengerProvider.messengerClient.SendMessage(messageQuery)
 	return err
 }

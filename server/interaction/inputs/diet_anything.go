@@ -1,14 +1,14 @@
 package inputs
 
-type DietAnything struct {}
+type DietAnything struct{}
 
-func NewDietAnything() *DietAnything{
+func NewDietAnything() *DietAnything {
 	return &DietAnything{}
 }
 
 const DIET_ANYTHING_INPUT = "no-diet"
 const DIET_ANYTHING_TITLE = "אוכל-כל🍗"
 
-func (diet *DietAnything) Payload() string{
+func (diet *DietAnything) Payload() string {
 	return DIET_ANYTHING_INPUT
 }

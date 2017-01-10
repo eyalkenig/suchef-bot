@@ -14,14 +14,15 @@ type IBotDataProvider interface {
 }
 
 type DBConnectionParams struct {
-	User string
+	User     string
 	Password string
-	Address string
-	DBName string
+	Address  string
+	DBName   string
 }
 
 type IMessengerProvider interface {
 	SendImage(externalUserID, imageURL string) (err error)
 	SendSimpleMessage(externalUserID, text string) (err error)
 	SendQuickReplyMessage(externalUserID, text string, quickReplies map[string]string) (err error)
+	SendGenericTemplate(externalUserID string, titleToPhotoURL map[string]string) (err error)
 }

@@ -1,19 +1,21 @@
-package states
+package diet
 
-import(
-	. "github.com/eyalkenig/suchef-bot/server/interaction/inputs"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
+	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
+	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 )
-type SelectDiet struct{
+
+type SelectDiet struct {
 	messengerProvider providers.IMessengerProvider
-	userContext context.IUserContext
-	stateFactory IStateFactory
+	userContext       context.IUserContext
+	stateFactory      interfaces.IStateFactory
 }
 
 const SELECT_DIET_STATE_ID = 10
 
-func NewSelectDiet(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory IStateFactory) *SelectDiet {
+func NewSelectDiet(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory interfaces.IStateFactory) *SelectDiet {
 	return &SelectDiet{userContext: userContext, messengerProvider: messengerProvider, stateFactory: stateFactory}
 }
 
@@ -29,28 +31,28 @@ func (state *SelectDiet) Act() (err error) {
 	}
 
 	quickReplies := make(map[string]string)
-	quickReplies[DIET_VEGAN_TITLE] = DIET_VEGAN_INPUT
-	quickReplies[DIET_VEGETARIAN_TITLE] = DIET_VEGETARIAN_INPUT
-	quickReplies[DIET_ANYTHING_TITLE] = DIET_ANYTHING_INPUT
+	quickReplies[inputs.DIET_VEGAN_TITLE] = inputs.DIET_VEGAN_INPUT
+	quickReplies[inputs.DIET_VEGETARIAN_TITLE] = inputs.DIET_VEGETARIAN_INPUT
+	quickReplies[inputs.DIET_ANYTHING_TITLE] = inputs.DIET_ANYTHING_INPUT
 	text := "אז.. מה אתה?"
-	if !state.userContext.IsMale(){
+	if !state.userContext.IsMale() {
 		text = "אז.. מה את?"
 	}
 
 	return state.messengerProvider.SendQuickReplyMessage(externalUserID, text, quickReplies)
 }
 
-func (state *SelectDiet) Next(input IStateInput) (nextState IState, err error) {
+func (state *SelectDiet) Next(input interfaces.IStateInput) (nextState interfaces.IState, err error) {
 	payload := input.Payload()
 	var nextStateID int64
 	switch payload {
-	case DIET_ANYTHING_INPUT:
+	case inputs.DIET_ANYTHING_INPUT:
 		nextStateID = SELECTED_ANYTHING_DIET_STATE_ID
-	case DIET_VEGAN_INPUT:
+	case inputs.DIET_VEGAN_INPUT:
 		nextStateID = SELECTED_VEGAN_DIET_STATE_ID
-	case DIET_VEGETARIAN_INPUT:
+	case inputs.DIET_VEGETARIAN_INPUT:
 		nextStateID = SELECTED_VEGETARIAN_DIET_STATE_ID
-	case FREE_TEXT_INPUT:
+	case inputs.FREE_TEXT_INPUT:
 		nextStateID = SELECT_DIET_OR_NOT_STATE_ID
 	default:
 		return nil, nil
@@ -59,6 +61,6 @@ func (state *SelectDiet) Next(input IStateInput) (nextState IState, err error) {
 	return state.stateFactory.GetState(nextStateID)
 }
 
-func (state *SelectDiet) GetNextStage() (IState, error) {
-	return nil,nil
+func (state *SelectDiet) GetNextStage() (interfaces.IState, error) {
+	return nil, nil
 }

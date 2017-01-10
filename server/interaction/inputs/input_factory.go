@@ -1,17 +1,18 @@
 package inputs
 
 import (
-	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
 	"errors"
+	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
+	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 )
 
-type StateInputFactory struct {}
+type StateInputFactory struct{}
 
-func NewStateInputFactory() *StateInputFactory{
+func NewStateInputFactory() *StateInputFactory {
 	return &StateInputFactory{}
 }
 
-func (inputFactory *StateInputFactory) CastMessageToInput(message messenger.ReceivedMessage) (input IStateInput, err error) {
+func (inputFactory *StateInputFactory) CastMessageToInput(message messenger.ReceivedMessage) (input interfaces.IStateInput, err error) {
 	if message.Text == LETS_START_FROM_SCRATCH_INPUT {
 		return NewLetsStartFromScratch(), nil
 	}
