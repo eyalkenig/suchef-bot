@@ -28,6 +28,7 @@ func NewSuchefController(messengerClient *messenger.Messenger, dbConnectionParam
 func (controller *SuchefController) Handle(accountID int64, event messenger.Event, opts messenger.MessageOpts, msg messenger.ReceivedMessage) error {
 	externalUserID := opts.Sender.ID
 	user, err := controller.dataProvider.FetchUser(accountID, externalUserID)
+	defer controller.dataProvider.Close()
 
 	if err != nil {
 		return err

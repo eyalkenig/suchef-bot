@@ -129,6 +129,10 @@ func (dataProvider *BotDataProvider) SetSensitivity(userID, sensitivityTypeID in
 	return err
 }
 
+func (dataProvider *BotDataProvider) Close() error {
+	return dataProvider.db.Close()
+}
+
 func (dataProvider *BotDataProvider) getLastUserInteraction(userID int64) (int64, error) {
 	row := dataProvider.db.QueryRow(FETCH_LAST_INTERACTION_QUERY, userID)
 

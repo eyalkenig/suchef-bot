@@ -11,6 +11,8 @@ type IBotDataProvider interface {
 
 	SetUserDiet(userID, dietTypeID int64) (err error)
 	SetSensitivity(userID, sensitivityTypeID int64) (err error)
+
+	Close() error
 }
 
 type DBConnectionParams struct {
