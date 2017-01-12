@@ -25,6 +25,7 @@ const UPDATE_USER_SENSITIVITY = "UPDATE users SET sensitivity_id = ? WHERE (id =
 
 func NewBotDataProvider(connParams DBConnectionParams) (dataProvider *BotDataProvider, err error) {
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s", connParams.User, connParams.Password, connParams.Address, connParams.DBName)
+	fmt.Println("connecting to mysql: " + connectionString)
 	db, err := sql.Open("mysql", connectionString)
 
 	if err != nil {

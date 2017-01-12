@@ -61,6 +61,10 @@ func (controller *SuchefController) initUser(accountID int64, externalUserID str
 	}
 	_, err = controller.dataProvider.CreateUser(accountID, externalUserID, profile.FirstName, profile.LastName, profile.Gender, profile.ProfilePicture, profile.Locale, profile.Timezone)
 
+	if err != nil {
+		return nil, err
+	}
+
 	user, err = controller.dataProvider.FetchUser(accountID, externalUserID)
 
 	if err != nil {

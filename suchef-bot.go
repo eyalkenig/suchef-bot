@@ -30,6 +30,8 @@ func main() {
 
 	if err != nil {
 		fmt.Println("could not create suchef server. error: " + err.Error())
+	} else {
+		fmt.Println("server started successfully")
 	}
 
 	messenger.MessageReceived = suchefServer.BindMessageReceived()
