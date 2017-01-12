@@ -130,6 +130,7 @@ func (dataProvider *BotDataProvider) SetSensitivity(userID, sensitivityTypeID in
 }
 
 func (dataProvider *BotDataProvider) Close() error {
+	fmt.Println("Closing DB..")
 	return dataProvider.db.Close()
 }
 
