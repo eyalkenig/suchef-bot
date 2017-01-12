@@ -6,7 +6,7 @@ import (
 )
 
 type UserContext struct {
-	user *models.User
+	user       *models.User
 	dbProvider providers.IBotDataProvider
 }
 

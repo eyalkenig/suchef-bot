@@ -1,0 +1,25 @@
+{
+	"ImportPath": "github.com/eyalkenig/suchef-bot",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v76",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.3-2-g2e00b5c",
+			"Rev": "2e00b5cd70399450106cec6431c2e2ce3cae5034"
+		},
+		{
+			"ImportPath": "github.com/maciekmm/messenger-platform-go-sdk/template",
+			"Comment": "v4.5-9-g71a3a43",
+			"Rev": "71a3a43148e3c5a2d20ceb133aed0faefd92ed34"
+		},
+		{
+			"ImportPath": "gopkg.in/maciekmm/messenger-platform-go-sdk.v4",
+			"Comment": "v4.5",
+			"Rev": "0cb6e825b6fb086b37ffee383ed3057f3a706d0c"
+		}
+	]
+}
