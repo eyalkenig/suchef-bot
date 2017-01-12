@@ -1,35 +1,3 @@
--- STATES
-CREATE TABLE `states` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- INTERACTIONS
-
-CREATE TABLE `interactions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `interactions_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- INTERACTION_STATES
-
-CREATE TABLE `interaction_states` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `interaction_id` int(11) NOT NULL,
-  `state_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `interaction_states_state_id` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`),
-  CONSTRAINT `interaction_states_interaction_id` FOREIGN KEY (`interaction_id`) REFERENCES `interactions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 -- ACCOUNTS
 
 CREATE TABLE `accounts` (
@@ -61,6 +29,38 @@ CREATE TABLE `users` (
   UNIQUE KEY `account_id_external_user_id` (`account_id`,`external_user_id`),
   CONSTRAINT `users_accounts_id_fk` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- STATES
+CREATE TABLE `states` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- INTERACTIONS
+
+CREATE TABLE `interactions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `interactions_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- INTERACTION_STATES
+
+CREATE TABLE `interaction_states` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `interaction_id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `interaction_states_state_id` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`),
+  CONSTRAINT `interaction_states_interaction_id` FOREIGN KEY (`interaction_id`) REFERENCES `interactions` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- DIETS
 
