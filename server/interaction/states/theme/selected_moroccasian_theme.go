@@ -2,21 +2,30 @@ package theme
 
 import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
-	"github.com/eyalkenig/suchef-bot/server/providers"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
+	"github.com/eyalkenig/suchef-bot/server/models"
+	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/repositories"
 )
 
 type SelectedMoroccasianTheme struct {
 	messengerProvider providers.IMessengerProvider
 	userContext       context.IUserContext
 	stateFactory      interfaces.IStateFactory
+	courseRepository  repositories.ICourseRepository
 }
 
 const SELECTED_MOROCCASIAN_THEME_STATE_ID = 38
 const MOROCCASIAN_THEME_TYPE_ID = 30
 
-func NewSelectedMoroccasianTheme(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory interfaces.IStateFactory) *SelectedMoroccasianTheme {
-	return &SelectedMoroccasianTheme{userContext: userContext, messengerProvider: messengerProvider, stateFactory: stateFactory}
+func NewSelectedMoroccasianTheme(userContext context.IUserContext,
+	messengerProvider providers.IMessengerProvider,
+	stateFactory interfaces.IStateFactory,
+	courseRepository repositories.ICourseRepository) *SelectedMoroccasianTheme {
+	return &SelectedMoroccasianTheme{userContext: userContext,
+		messengerProvider: messengerProvider,
+		stateFactory:      stateFactory,
+		courseRepository:  courseRepository}
 }
 
 func (state *SelectedMoroccasianTheme) ID() int64 {
@@ -25,11 +34,13 @@ func (state *SelectedMoroccasianTheme) ID() int64 {
 
 func (state *SelectedMoroccasianTheme) Act() (err error) {
 	externalUserID := state.userContext.GetExternalUserID()
-	err = state.messengerProvider.SendSimpleMessage(externalUserID, "קובה בקרם קוקוס וקארי")
+	theme := &models.Theme{ID: 30, Name: "moroccasian"}
+	quickReplies, err := GetSelectedThemeQuickReplies(state.courseRepository, theme, state.userContext)
+
 	if err != nil {
 		return err
 	}
-	return state.messengerProvider.SendImage(externalUserID, "https://s23.postimg.org/ccl4mikfv/kuba1.jpg")
+	return state.messengerProvider.SendGenericTemplate(externalUserID, quickReplies)
 }
 
 func (state *SelectedMoroccasianTheme) Next(input interfaces.IStateInput) (nextState interfaces.IState, err error) {

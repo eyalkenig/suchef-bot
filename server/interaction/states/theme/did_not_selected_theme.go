@@ -2,20 +2,28 @@ package theme
 
 import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
-	"github.com/eyalkenig/suchef-bot/server/providers"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
+	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/repositories"
 )
 
 type DidNotSelectedTheme struct {
 	messengerProvider providers.IMessengerProvider
 	userContext       context.IUserContext
 	stateFactory      interfaces.IStateFactory
+	courseRepository  repositories.ICourseRepository
 }
 
 const DID_NOT_SELECTED_THEME_STATE_ID = 39
 
-func NewDidNotSelectedTheme(userContext context.IUserContext, messengerProvider providers.IMessengerProvider, stateFactory interfaces.IStateFactory) *DidNotSelectedTheme {
-	return &DidNotSelectedTheme{userContext: userContext, messengerProvider: messengerProvider, stateFactory: stateFactory}
+func NewDidNotSelectedTheme(userContext context.IUserContext,
+	messengerProvider providers.IMessengerProvider,
+	stateFactory interfaces.IStateFactory,
+	courseRepository repositories.ICourseRepository) *DidNotSelectedTheme {
+	return &DidNotSelectedTheme{userContext: userContext,
+		messengerProvider: messengerProvider,
+		stateFactory:      stateFactory,
+		courseRepository:  courseRepository}
 }
 
 func (state *DidNotSelectedTheme) ID() int64 {

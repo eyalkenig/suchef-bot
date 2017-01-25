@@ -101,3 +101,22 @@ CREATE TABLE `courses` (
   `main_photo_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- METADATA_TYPES
+CREATE TABLE `metadata_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- COURSES_METADATA
+
+CREATE TABLE `courses_metadata` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` int(11) NOT NULL,
+  `metadata_type_id` int(11) NOT NULL,
+  `value_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `courses_id_fk` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
+  CONSTRAINT `metadata_type_id_fk` FOREIGN KEY (`metadata_type_id`) REFERENCES `metadata_types` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

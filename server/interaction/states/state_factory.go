@@ -10,16 +10,18 @@ import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/states/sensitivity"
 	"github.com/eyalkenig/suchef-bot/server/interaction/states/theme"
 	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/repositories"
 )
 
 type StateFactory struct {
 	messengerProvider providers.IMessengerProvider
 	dbProvider        providers.IBotDataProvider
 	userContext       context.IUserContext
+	courseRepository  repositories.ICourseRepository
 }
 
-func NewStateFactory(messengerProvider providers.IMessengerProvider, dbProvider providers.IBotDataProvider, userContext context.IUserContext) *StateFactory {
-	return &StateFactory{messengerProvider: messengerProvider, dbProvider: dbProvider, userContext: userContext}
+func NewStateFactory(messengerProvider providers.IMessengerProvider, dbProvider providers.IBotDataProvider, userContext context.IUserContext, courseRepository repositories.ICourseRepository) *StateFactory {
+	return &StateFactory{messengerProvider: messengerProvider, dbProvider: dbProvider, userContext: userContext, courseRepository: courseRepository}
 }
 
 func (stateFactory *StateFactory) GetState(stateID int64) (state interfaces.IState, err error) {
@@ -53,13 +55,13 @@ func (stateFactory *StateFactory) GetState(stateID int64) (state interfaces.ISta
 	case theme.SELECT_THEME_OR_NOT_STATE_ID:
 		return theme.NewSelectFoodThemeOrNot(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
 	case theme.SELECTED_ASIAN_THEME_STATE_ID:
-		return theme.NewSelectedAsianTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+		return theme.NewSelectedAsianTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory, stateFactory.courseRepository), nil
 	case theme.SELECTED_MOROCCAN_THEME_STATE_ID:
-		return theme.NewSelectedMoroccanTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+		return theme.NewSelectedMoroccanTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory, stateFactory.courseRepository), nil
 	case theme.SELECTED_MOROCCASIAN_THEME_STATE_ID:
-		return theme.NewSelectedMoroccasianTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+		return theme.NewSelectedMoroccasianTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory, stateFactory.courseRepository), nil
 	case theme.DID_NOT_SELECTED_THEME_STATE_ID:
-		return theme.NewDidNotSelectedTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory), nil
+		return theme.NewDidNotSelectedTheme(stateFactory.userContext, stateFactory.messengerProvider, stateFactory, stateFactory.courseRepository), nil
 	}
 	return nil, errors.New(fmt.Sprintf("Invalid state id: %d", stateID))
 }
