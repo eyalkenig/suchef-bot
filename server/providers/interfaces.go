@@ -12,6 +12,9 @@ type IBotDataProvider interface {
 	SetUserDiet(userID, dietTypeID int64) (err error)
 	SetSensitivity(userID, sensitivityTypeID int64) (err error)
 
+	FetchUserPreference(userID int64) (dietID, sensitivityID int64, err error)
+
+	FetchCourses() ([]*models.Course, error)
 	Close() error
 }
 
@@ -23,8 +26,8 @@ type DBConnectionParams struct {
 }
 
 type IMessengerProvider interface {
-	SendImage(externalUserID, imageURL string) (err error)
-	SendSimpleMessage(externalUserID, text string) (err error)
-	SendQuickReplyMessage(externalUserID, text string, quickReplies map[string]string) (err error)
-	SendGenericTemplate(externalUserID string, titleToPhotoURL map[string]string) (err error)
+	SendImage(externalUserID, imageURL string) error
+	SendSimpleMessage(externalUserID, text string) error
+	SendQuickReplyMessage(externalUserID, text string, quickReplies map[string]string) error
+	SendGenericTemplate(externalUserID string, titleToPhotoURL map[string]string) error
 }

@@ -1,12 +1,13 @@
 package interaction
 
 import (
-	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
 	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
+	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 	"github.com/eyalkenig/suchef-bot/server/interaction/states"
 	"github.com/eyalkenig/suchef-bot/server/providers"
-	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
+	"github.com/eyalkenig/suchef-bot/server/repositories"
+	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
 )
 
 type StateMachineController struct {
@@ -18,9 +19,11 @@ type StateMachineController struct {
 
 func NewStateMachineController(messengerProvider providers.IMessengerProvider,
 	stateDataProvider providers.IBotDataProvider,
-	userContext context.IUserContext) *StateMachineController {
+	userContext context.IUserContext,
+	courseRepository repositories.ICourseRepository) *StateMachineController {
+
 	inputFactory := inputs.NewStateInputFactory()
-	statesFactory := states.NewStateFactory(messengerProvider, stateDataProvider, userContext)
+	statesFactory := states.NewStateFactory(messengerProvider, stateDataProvider, userContext, courseRepository)
 
 	return &StateMachineController{inputFactory: inputFactory,
 		stateDataProvider: stateDataProvider,

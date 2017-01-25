@@ -33,3 +33,24 @@ func (context *UserContext) SetDiet(dietID int64) error {
 func (context *UserContext) SetSensitivity(sensitivityID int64) error {
 	return context.dbProvider.SetSensitivity(context.user.ID, sensitivityID)
 }
+
+func (context *UserContext) GetPreferences() (*models.Preference, error) {
+	dietID, sensitivityID, err := context.dbProvider.FetchUserPreference(context.user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	diet, err := models.GetDiet(dietID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	sensitivity, err := models.GetSensitivity(sensitivityID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.Preference{Diet: diet, Sensitivity: sensitivity}, nil
+}

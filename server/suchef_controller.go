@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"github.com/eyalkenig/suchef-bot/server/interaction"
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
+	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 	"github.com/eyalkenig/suchef-bot/server/models"
 	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/repositories"
 	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
-	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 )
 
 type SuchefController struct {
-	dataProvider    providers.IBotDataProvider
-	messengerClient *messenger.Messenger
+	dataProvider     providers.IBotDataProvider
+	messengerClient  *messenger.Messenger
+	courseRepository repositories.ICourseRepository
 }
 
 func NewSuchefController(messengerClient *messenger.Messenger, dbConnectionParams providers.DBConnectionParams) (controller *SuchefController, err error) {
@@ -22,13 +24,14 @@ func NewSuchefController(messengerClient *messenger.Messenger, dbConnectionParam
 		return nil, err
 	}
 
-	return &SuchefController{dataProvider: dataProvider, messengerClient: messengerClient}, nil
+	courseRepository := repositories.NewCourseRepository(dataProvider)
+	return &SuchefController{dataProvider: dataProvider, messengerClient: messengerClient, courseRepository: courseRepository}, nil
 }
 
 func (controller *SuchefController) Handle(accountID int64, event messenger.Event, opts messenger.MessageOpts, msg messenger.ReceivedMessage) error {
 	externalUserID := opts.Sender.ID
 	user, err := controller.dataProvider.FetchUser(accountID, externalUserID)
-	
+
 	if err != nil {
 		return err
 	}
@@ -84,5 +87,5 @@ func (controller *SuchefController) initUser(accountID int64, externalUserID str
 func (controller *SuchefController) getStateController(user *models.User) interfaces.IStateMachineController {
 	messengerProvider := providers.NewFacebookMessengerProvider(controller.messengerClient)
 	userContext := context.NewUserContext(user, controller.dataProvider)
-	return interaction.NewStateMachineController(messengerProvider, controller.dataProvider, userContext)
+	return interaction.NewStateMachineController(messengerProvider, controller.dataProvider, userContext, controller.courseRepository)
 }
