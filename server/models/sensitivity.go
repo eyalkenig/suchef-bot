@@ -6,4 +6,4 @@ type Sensitivity struct {
 }
 
 const SensitivityMetadataTypeName = "sensitivity"
-const SensitivityMetadataTypeID = 39
+const SensitivityMetadataTypeID = 40
