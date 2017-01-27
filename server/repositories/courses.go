@@ -1,17 +1,18 @@
 package repositories
 
 import (
-	"github.com/eyalkenig/suchef-bot/server/models"
-	"github.com/eyalkenig/suchef-bot/server/providers"
 	"fmt"
+
+	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
+	"github.com/eyalkenig/suchef-bot/server/models"
 )
 
 type CourseRepository struct {
 	courses []*models.Course
 }
 
-func NewCourseRepository(dataProvider providers.IBotDataProvider) *CourseRepository {
-	courses, err := dataProvider.FetchCourses()
+func NewCourseRepository(accountID int64, dataProvider providers.IBotDataProvider) *CourseRepository {
+	courses, err := dataProvider.FetchCourses(accountID)
 
 	if err != nil {
 		fmt.Println("Failed to load courses.")

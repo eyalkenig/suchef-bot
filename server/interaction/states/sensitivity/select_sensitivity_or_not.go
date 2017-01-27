@@ -3,9 +3,9 @@ package sensitivity
 import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
 	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
-	"github.com/eyalkenig/suchef-bot/server/providers"
-	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 	"github.com/eyalkenig/suchef-bot/server/interaction/inputs/sensitivity"
+	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
+	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
 )
 
 type SelectSensitivityOrNot struct {

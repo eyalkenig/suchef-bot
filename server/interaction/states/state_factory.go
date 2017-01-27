@@ -9,7 +9,7 @@ import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/states/diet"
 	"github.com/eyalkenig/suchef-bot/server/interaction/states/sensitivity"
 	"github.com/eyalkenig/suchef-bot/server/interaction/states/theme"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
 	"github.com/eyalkenig/suchef-bot/server/repositories"
 )
 

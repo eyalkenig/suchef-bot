@@ -3,7 +3,7 @@ package theme
 import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
 	"github.com/eyalkenig/suchef-bot/server/repositories"
 )
 

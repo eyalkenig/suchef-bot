@@ -14,20 +14,6 @@ type IBotDataProvider interface {
 
 	FetchUserPreference(userID int64) (dietID, sensitivityID int64, err error)
 
-	FetchCourses() ([]*models.Course, error)
+	FetchCourses(accountID int64) ([]*models.Course, error)
 	Close() error
-}
-
-type DBConnectionParams struct {
-	User     string
-	Password string
-	Address  string
-	DBName   string
-}
-
-type IMessengerProvider interface {
-	SendImage(externalUserID, imageURL string) error
-	SendSimpleMessage(externalUserID, text string) error
-	SendQuickReplyMessage(externalUserID, text string, quickReplies map[string]string) error
-	SendGenericTemplate(externalUserID string, titleToPhotoURL map[string]string) error
 }

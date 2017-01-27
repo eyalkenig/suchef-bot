@@ -96,6 +96,7 @@ CREATE TABLE `themes` (
 
 CREATE TABLE `courses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `main_photo_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,

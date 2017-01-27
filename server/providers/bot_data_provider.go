@@ -3,12 +3,21 @@ package providers
 import (
 	"database/sql"
 	"fmt"
-	"github.com/eyalkenig/suchef-bot/server/models"
+
 	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/eyalkenig/suchef-bot/server/models"
 )
 
 type BotDataProvider struct {
 	db *sql.DB
+}
+
+type DBConnectionParams struct {
+	User     string
+	Password string
+	Address  string
+	DBName   string
 }
 
 const FETCH_USER_QUERY = "SELECT id, account_id, external_user_id, first_name, last_name, profile_pic, locale, timezone, gender, diet_id, sensitivity_id FROM users WHERE (account_id = ? AND external_user_id = ?)"
@@ -31,7 +40,13 @@ INNER JOIN courses AS c ON c.id = cm.course_id
 LEFT JOIN diets AS d ON cm.metadata_type_id = ? AND cm.value_id=d.type_id
 LEFT JOIN sensitivities AS s ON cm.metadata_type_id = ? AND cm.value_id=s.type_id
 LEFT JOIN themes AS t ON cm.metadata_type_id = ? AND cm.value_id=t.type_id
+WHERE account_id = ?
 order by c.id`
+
+//ADMINS
+const FETCH_ACCOUNT_ID_BY_TOKEN = "SELECT id FROM accounts WHERE (page_access_token = ?) LIMIT 1"
+const CREATE_COURSE = "INSERT INTO courses VALUES (NULL, ?, ?, ?, ?)"
+const ADD_COURSE_METADATA = "INSERT INTO courses_metadata VALUES (NULL, ?, ?, ?)"
 
 func NewBotDataProvider(connParams DBConnectionParams) (dataProvider *BotDataProvider, err error) {
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s", connParams.User, connParams.Password, connParams.Address, connParams.DBName)
@@ -147,11 +162,12 @@ func (dataProvider *BotDataProvider) FetchUserPreference(userID int64) (dietID, 
 	return dietID, sensitivityID, err
 }
 
-func (dataProvider *BotDataProvider) FetchCourses() ([]*models.Course, error) {
+func (dataProvider *BotDataProvider) FetchCourses(accountID int64) ([]*models.Course, error) {
 	rows, err := dataProvider.db.Query(FETCH_COURSES_METADATA,
 		models.DietMetadataTypeID,
 		models.SensitivityMetadataTypeID,
-		models.ThemeMetadataTypeID)
+		models.ThemeMetadataTypeID,
+		accountID)
 
 	if err != nil {
 		return nil, err
@@ -204,6 +220,29 @@ func (dataProvider *BotDataProvider) getLastUserInteraction(userID int64) (int64
 	}
 
 	return interactionID, nil
+}
+
+func (dataProvider *BotDataProvider) GetAccountID(token string) (int64, error) {
+	row := dataProvider.db.QueryRow(FETCH_ACCOUNT_ID_BY_TOKEN, token)
+	var id int64
+	err := row.Scan(&id)
+	if err != nil {
+		return int64(-1), err
+	}
+	return id, nil
+}
+
+func (dataProvider *BotDataProvider) AddCourse(accountID int64, name, description, mainImageURL string) (int64, error) {
+	result, err := dataProvider.db.Exec(CREATE_COURSE, accountID, name, description, mainImageURL)
+	if err != nil {
+		return -1, err
+	}
+	return result.LastInsertId()
+}
+
+func (dataProvider *BotDataProvider) AddCourseMetadata(courseID, metadataTypeID, valueID int64) error {
+	_, err := dataProvider.db.Exec(ADD_COURSE_METADATA, courseID, metadataTypeID, valueID)
+	return err
 }
 
 func applyCourseMetadata(course *models.Course, diet, sensitivity, theme *string) {
