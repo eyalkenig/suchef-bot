@@ -53,6 +53,9 @@ func (controller *SuchefController) Handle(accountID int64, event messenger.Even
 	return nil
 }
 
+func (controller *SuchefController) ReloadCourses(accountID int64) {
+	controller.courseRepository = repositories.NewCourseRepository(accountID, controller.dataProvider)
+}
 func (controller *SuchefController) initUser(accountID int64, externalUserID string) (user *models.User, err error) {
 	profile, err := controller.messengerClient.GetProfile(externalUserID)
 	if err != nil {

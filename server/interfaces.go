@@ -8,6 +8,7 @@ import (
 
 type ISuchefController interface {
 	Handle(accountID int64, event messenger.Event, opts messenger.MessageOpts, msg messenger.ReceivedMessage) error
+	ReloadCourses(accountID int64)
 }
 
 type ISuchefAdminController interface {

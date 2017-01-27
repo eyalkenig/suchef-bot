@@ -97,4 +97,6 @@ func (suchefServer *SuchefServer) AddCourse(w http.ResponseWriter, r *http.Reque
 	}
 
 	w.WriteHeader(http.StatusOK)
+
+	suchefServer.controller.ReloadCourses(accountID)
 }
