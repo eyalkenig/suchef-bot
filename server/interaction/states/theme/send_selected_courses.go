@@ -2,6 +2,7 @@ package theme
 
 import (
 	"errors"
+
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
 	"github.com/eyalkenig/suchef-bot/server/models"
 	"github.com/eyalkenig/suchef-bot/server/repositories"

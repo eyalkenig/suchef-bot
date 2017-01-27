@@ -5,7 +5,7 @@ import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/inputs"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 	"github.com/eyalkenig/suchef-bot/server/interaction/states"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
 	"github.com/eyalkenig/suchef-bot/server/repositories"
 	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
 )

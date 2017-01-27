@@ -7,7 +7,8 @@ import (
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 	"github.com/eyalkenig/suchef-bot/server/models"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
+	concreteProviders "github.com/eyalkenig/suchef-bot/server/providers"
 	"github.com/eyalkenig/suchef-bot/server/repositories"
 	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
 )
@@ -18,14 +19,9 @@ type SuchefController struct {
 	courseRepository repositories.ICourseRepository
 }
 
-func NewSuchefController(messengerClient *messenger.Messenger, dbConnectionParams providers.DBConnectionParams) (controller *SuchefController, err error) {
-	dataProvider, err := providers.NewBotDataProvider(dbConnectionParams)
-	if err != nil {
-		return nil, err
-	}
-
-	courseRepository := repositories.NewCourseRepository(dataProvider)
-	return &SuchefController{dataProvider: dataProvider, messengerClient: messengerClient, courseRepository: courseRepository}, nil
+func NewSuchefController(accountID int64, messengerClient *messenger.Messenger, dataProvider providers.IBotDataProvider) *SuchefController {
+	courseRepository := repositories.NewCourseRepository(accountID, dataProvider)
+	return &SuchefController{dataProvider: dataProvider, messengerClient: messengerClient, courseRepository: courseRepository}
 }
 
 func (controller *SuchefController) Handle(accountID int64, event messenger.Event, opts messenger.MessageOpts, msg messenger.ReceivedMessage) error {
@@ -85,7 +81,7 @@ func (controller *SuchefController) initUser(accountID int64, externalUserID str
 }
 
 func (controller *SuchefController) getStateController(user *models.User) interfaces.IStateMachineController {
-	messengerProvider := providers.NewFacebookMessengerProvider(controller.messengerClient)
+	messengerProvider := concreteProviders.NewFacebookMessengerProvider(controller.messengerClient)
 	userContext := context.NewUserContext(user, controller.dataProvider)
 	return interaction.NewStateMachineController(messengerProvider, controller.dataProvider, userContext, controller.courseRepository)
 }

@@ -2,7 +2,7 @@ package context
 
 import (
 	"github.com/eyalkenig/suchef-bot/server/models"
-	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
 )
 
 type UserContext struct {

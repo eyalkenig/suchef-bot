@@ -1,13 +1,15 @@
 package main
 
 import (
-	"github.com/eyalkenig/suchef-bot/server"
-	"net/http"
-
 	"fmt"
-	"github.com/eyalkenig/suchef-bot/server/providers"
-	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
+	"net/http"
 	"os"
+
+	"github.com/eyalkenig/suchef-bot/server/providers"
+	"github.com/gorilla/mux"
+	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
+
+	"github.com/eyalkenig/suchef-bot/server"
 )
 
 func main() {
@@ -24,25 +26,29 @@ func main() {
 		DBName:   os.Getenv("DB_NAME"),
 	}
 
-	accountID := int64(1)
-
-	suchefServer, err := server.NewSuchefServer(accountID, messenger, dbConnectionParams)
-
+	dataProvider, err := providers.NewBotDataProvider(dbConnectionParams)
 	if err != nil {
 		fmt.Println("could not create suchef server. error: " + err.Error())
-	} else {
-		fmt.Println("server started successfully")
+		return
 	}
+
+	accountID := int64(1)
+
+	suchefServer := server.NewSuchefServer(accountID, messenger, dataProvider, dataProvider, dataProvider)
+	fmt.Println("server started successfully")
 
 	messenger.MessageReceived = suchefServer.BindMessageReceived()
 	messenger.Postback = suchefServer.BindPostbackReceived()
 
-	http.HandleFunc("/webhook", messenger.Handler)
-	http.HandleFunc("/privacy", privacy)
+	r := mux.NewRouter()
+	r.HandleFunc("/webhook", messenger.Handler)
+	r.HandleFunc("/privacy", privacy)
+	r.HandleFunc("/accounts/{account_id}/courses", suchefServer.AddCourse).Methods("POST")
+	http.Handle("/", r)
 	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
 
-func privacy (w http.ResponseWriter, r *http.Request) {
+func privacy(w http.ResponseWriter, r *http.Request) {
 	privacyText := `Suchef Privacy Policy
 	This privacy policy has been compiled to better serve those who are concerned with how their 'Personally Identifiable Information' (PII) is being used online. PII, as described in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our website.
 
