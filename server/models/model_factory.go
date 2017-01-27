@@ -35,6 +35,8 @@ func GetDietByName(dietName *string) (*Diet, error) {
 func GetSensitivity(sensitivityID int64) (*Sensitivity, error) {
 	var sensitivity *Sensitivity
 	switch sensitivityID {
+	case 0:
+		sensitivity = &Sensitivity{ID: 0, Name: "no"}
 	case 10:
 		sensitivity = &Sensitivity{ID: 10, Name: "gluten"}
 	case 20:
