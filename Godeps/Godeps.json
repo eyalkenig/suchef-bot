@@ -12,6 +12,11 @@
 			"Rev": "2e00b5cd70399450106cec6431c2e2ce3cae5034"
 		},
 		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.3.0",
+			"Rev": "392c28fe23e1c45ddba891b0320b3b5df220beea"
+		},
+		{
 			"ImportPath": "github.com/maciekmm/messenger-platform-go-sdk/template",
 			"Comment": "v4.5-9-g71a3a43",
 			"Rev": "71a3a43148e3c5a2d20ceb133aed0faefd92ed34"
