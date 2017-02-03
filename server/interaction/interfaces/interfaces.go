@@ -5,8 +5,17 @@ import (
 )
 
 type IStateMachineController interface {
-	InitUser() (err error)
-	Handle(message messenger.ReceivedMessage) (err error)
+	InitUser() error
+	Handle(message messenger.ReceivedMessage) error
+}
+
+type ICommandsController interface {
+	Handle(message messenger.ReceivedMessage) error
+}
+
+type IInteractionController interface {
+	InitUser() error
+	Handle(message messenger.ReceivedMessage) error
 }
 
 type IState interface {
@@ -29,4 +38,13 @@ type IStateInputFactory interface {
 }
 type IStateInput interface {
 	Payload() string
+}
+
+type ICommand interface{}
+
+type ICommandHandler interface {
+	Handle() error
+}
+type ICommandsHandlerFactory interface {
+	FetchHandler(command ICommand) (ICommandHandler, error)
 }

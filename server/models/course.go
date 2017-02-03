@@ -6,6 +6,8 @@ type Course struct {
 	ImageURL    string
 	Description string
 
+	Ingredients []*Ingredient
+
 	Tags map[string][]*string
 }
 

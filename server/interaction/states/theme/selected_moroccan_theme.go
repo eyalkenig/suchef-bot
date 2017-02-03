@@ -34,13 +34,18 @@ func (state *SelectedMoroccanTheme) ID() int64 {
 
 func (state *SelectedMoroccanTheme) Act() error {
 	externalUserID := state.userContext.GetExternalUserID()
-	theme := &models.Theme{ID: 20, Name: "moroccan"}
-	quickReplies, err := GetSelectedThemeQuickReplies(state.courseRepository, theme, state.userContext)
+	t := "moroccan"
+	theme, err := models.GetThemeByName(&t)
+	if err != nil {
+		return err
+	}
+	courses, err := GetSelectedThemeCourses(state.courseRepository, theme, state.userContext)
 
 	if err != nil {
 		return err
 	}
-	return state.messengerProvider.SendGenericTemplate(externalUserID, quickReplies)
+	alternatives := GetAlterantivesCourses()
+	return state.messengerProvider.SendGenericTemplate(externalUserID, alternatives, courses)
 }
 
 func (state *SelectedMoroccanTheme) Next(input interfaces.IStateInput) (nextState interfaces.IState, err error) {

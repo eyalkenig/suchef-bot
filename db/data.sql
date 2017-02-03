@@ -39,12 +39,6 @@ INSERT INTO themes VALUES(NULL, 10, "asian");
 INSERT INTO themes VALUES(NULL, 20, "moroccan");
 INSERT INTO themes VALUES(NULL, 30, "moroccasian");
 
--- COURSES
-
-INSERT INTO courses VALUES(NULL, 'דג מרוקאי','', 'https://s30.postimg.org/49fugw4z5/fish.jpg');
-INSERT INTO courses VALUES(NULL, 'דג בקארי','', 'https://s28.postimg.org/u1hmefp1p/malai_not_grained.jpg');
-INSERT INTO courses VALUES(NULL, 'קובה בקרס קוקוס וקארי','', 'https://s23.postimg.org/ccl4mikfv/kuba1.jpg');
-
 -- METADATA_TYPES
 
 INSERT INTO metadata_types VALUES(NULL, 'diet');

@@ -1,8 +1,10 @@
 package providers
 
 import (
+	"github.com/eyalkenig/suchef-bot/server/interfaces/messaging"
 	"github.com/maciekmm/messenger-platform-go-sdk/template"
 	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
+	"errors"
 )
 
 type FacebookMessengerProvider struct {
@@ -42,23 +44,68 @@ func (messengerProvider *FacebookMessengerProvider) SendImage(externalUserID, im
 	return err
 }
 
-func (messengerProvider *FacebookMessengerProvider) SendGenericTemplate(externalUserID string, titleToPhotoURL map[string]string) (err error) {
+func (messengerProvider *FacebookMessengerProvider) SendGenericTemplate(externalUserID string, quickReplies map[string]string, cards []messaging.ICard) error {
 	messageQuery := messenger.MessageQuery{}
 	messageQuery.RecipientID(externalUserID)
 
-	for title, photoURL := range titleToPhotoURL {
-		messageQuery.Template(template.GenericTemplate{Title: title,
-			ImageURL: photoURL,
-			Buttons: []template.Button{
-				{
-					Type:    template.ButtonTypePostback,
-					Payload: "test_" + title,
-					Title:   "מרכיבים",
-				},
-			},
-		})
+	for _, card := range cards {
+		genericTemplate, err := castCardToGenericTemplate(card)
+		if err != nil {
+			return err
+		}
+		err = messageQuery.Template(genericTemplate)
+		if err != nil {
+			return err
+		}
 	}
-
-	_, err = messengerProvider.messengerClient.SendMessage(messageQuery)
+	for title, payload := range quickReplies {
+		if err := messageQuery.QuickReply(title, payload); err != nil {
+			return err
+		}
+	}
+	_, err := messengerProvider.messengerClient.SendMessage(messageQuery)
 	return err
+}
+
+func castButtonsToFacebookButtons(buttons []messaging.IButton) ([]template.Button, error) {
+	facebookButtons := []template.Button{}
+	for _, button := range buttons {
+		facebookButtonType, err := castButtonType(button.Type())
+		if err != nil {
+			return nil, err
+		}
+		facebookButton := template.Button{Type: facebookButtonType, Title: button.Title(), Payload: button.Payload()}
+		facebookButtons = append(facebookButtons, facebookButton)
+	}
+	return facebookButtons, nil
+}
+
+func castCardToGenericTemplate(card messaging.ICard) (template.GenericTemplate, error) {
+	buttons, err := castButtonsToFacebookButtons(card.Buttons())
+	if err != nil {
+		return template.GenericTemplate{}, err
+	}
+	genericTemplate := template.GenericTemplate{Title: card.Title(),
+		Subtitle: card.Subtitle(),
+		ImageURL: card.ImageURL(),
+		Buttons:  buttons,
+	}
+	return genericTemplate, nil
+}
+
+func castButtonType(buttonType string) (template.ButtonType, error) {
+	switch buttonType {
+	case "web_url":
+		return template.ButtonTypeWebURL, nil
+	case "postback":
+		return template.ButtonTypePostback, nil
+	case "phone_number":
+		return template.ButtonTypePhoneNumber, nil
+	case "account_link":
+		return template.ButtonTypeAccountLink, nil
+	case "account_unlink":
+		return template.ButtonTypeAccountUnlink, nil
+	default:
+		return "", errors.New("unkown button type: " + buttonType)
+	}
 }

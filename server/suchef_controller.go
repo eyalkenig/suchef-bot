@@ -11,6 +11,7 @@ import (
 	concreteProviders "github.com/eyalkenig/suchef-bot/server/providers"
 	"github.com/eyalkenig/suchef-bot/server/repositories"
 	"gopkg.in/maciekmm/messenger-platform-go-sdk.v4"
+	"github.com/eyalkenig/suchef-bot/server/interaction/commands"
 )
 
 type SuchefController struct {
@@ -43,7 +44,7 @@ func (controller *SuchefController) Handle(accountID int64, event messenger.Even
 		return nil
 	}
 
-	stateController := controller.getStateController(user)
+	stateController := controller.getInteractionController(user)
 	err = stateController.Handle(msg)
 
 	if err != nil {
@@ -73,7 +74,7 @@ func (controller *SuchefController) initUser(accountID int64, externalUserID str
 		return nil, err
 	}
 
-	stateController := controller.getStateController(user)
+	stateController := controller.getInteractionController(user)
 	err = stateController.InitUser()
 
 	if err != nil {
@@ -83,8 +84,10 @@ func (controller *SuchefController) initUser(accountID int64, externalUserID str
 	return user, nil
 }
 
-func (controller *SuchefController) getStateController(user *models.User) interfaces.IStateMachineController {
+func (controller *SuchefController) getInteractionController(user *models.User) interfaces.IInteractionController {
 	messengerProvider := concreteProviders.NewFacebookMessengerProvider(controller.messengerClient)
 	userContext := context.NewUserContext(user, controller.dataProvider)
-	return interaction.NewStateMachineController(messengerProvider, controller.dataProvider, userContext, controller.courseRepository)
+	stateMachineController := interaction.NewStateMachineController(messengerProvider, controller.dataProvider, userContext, controller.courseRepository)
+	commandsController := commands.NewCommandsController(messengerProvider, controller.dataProvider, userContext)
+	return interaction.NewInteractionController(commandsController, stateMachineController)
 }

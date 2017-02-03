@@ -21,7 +21,7 @@ func NewSelectFoodThemeOrNot(userContext context.IUserContext, messengerProvider
 }
 
 func (state *SelectFoodThemeOrNot) ID() int64 {
-	return SELECT_THEME_STATE_ID
+	return SELECT_THEME_OR_NOT_STATE_ID
 }
 
 func (state *SelectFoodThemeOrNot) Act() (err error) {
