@@ -43,10 +43,14 @@ LEFT JOIN themes AS t ON cm.metadata_type_id = ? AND cm.value_id=t.type_id
 WHERE account_id = ?
 order by c.id`
 
+const FETCH_COURSE_NAME = "SELECT name FROM courses WHERE id = ? LIMIT 1"
+const FETCH_INGREDIENTS = "SELECT name FROM ingredients WHERE course_id = ?"
+
 //ADMINS
 const FETCH_ACCOUNT_ID_BY_TOKEN = "SELECT id FROM accounts WHERE (page_access_token = ?) LIMIT 1"
 const CREATE_COURSE = "INSERT INTO courses VALUES (NULL, ?, ?, ?, ?)"
 const ADD_COURSE_METADATA = "INSERT INTO courses_metadata VALUES (NULL, ?, ?, ?)"
+const ADD_COURSE_INGREDIENT = "INSERT INTO ingredients VALUES(NULL, ?, ?)"
 
 func NewBotDataProvider(connParams DBConnectionParams) (dataProvider *BotDataProvider, err error) {
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s", connParams.User, connParams.Password, connParams.Address, connParams.DBName)
@@ -162,6 +166,14 @@ func (dataProvider *BotDataProvider) FetchUserPreference(userID int64) (dietID, 
 	return dietID, sensitivityID, err
 }
 
+func (dataProvider *BotDataProvider) FetchCourseName(courseID int64) (name string, err error) {
+	row := dataProvider.db.QueryRow(FETCH_COURSE_NAME, courseID)
+
+	err = row.Scan(&name)
+
+	return name, err
+}
+
 func (dataProvider *BotDataProvider) FetchCourses(accountID int64) ([]*models.Course, error) {
 	rows, err := dataProvider.db.Query(FETCH_COURSES_METADATA,
 		models.DietMetadataTypeID,
@@ -222,6 +234,26 @@ func (dataProvider *BotDataProvider) getLastUserInteraction(userID int64) (int64
 	return interactionID, nil
 }
 
+func (dataProvider *BotDataProvider) FetchIngredients(courseID int64) ([]*models.Ingredient, error) {
+	rows, err := dataProvider.db.Query(FETCH_INGREDIENTS, courseID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var ingredients []*models.Ingredient
+	for rows.Next() {
+		var name string
+		err = rows.Scan(&name)
+		if err != nil {
+			return nil, err
+		}
+		ingredients = append(ingredients, &models.Ingredient{Name: name})
+	}
+
+	return ingredients, nil
+}
+
 func (dataProvider *BotDataProvider) GetAccountID(token string) (int64, error) {
 	row := dataProvider.db.QueryRow(FETCH_ACCOUNT_ID_BY_TOKEN, token)
 	var id int64
@@ -242,6 +274,11 @@ func (dataProvider *BotDataProvider) AddCourse(accountID int64, name, descriptio
 
 func (dataProvider *BotDataProvider) AddCourseMetadata(courseID, metadataTypeID, valueID int64) error {
 	_, err := dataProvider.db.Exec(ADD_COURSE_METADATA, courseID, metadataTypeID, valueID)
+	return err
+}
+
+func (dataProvider *BotDataProvider) AddCourseIngredient(courseID int64, ingredientName string) error {
+	_, err := dataProvider.db.Exec(ADD_COURSE_INGREDIENT, courseID, ingredientName)
 	return err
 }
 

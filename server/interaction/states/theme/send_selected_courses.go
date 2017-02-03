@@ -7,13 +7,16 @@ import (
 	"github.com/eyalkenig/suchef-bot/server/models"
 	"github.com/eyalkenig/suchef-bot/server/repositories"
 	"github.com/eyalkenig/suchef-bot/server/selectors"
+
+	"github.com/eyalkenig/suchef-bot/server/interfaces/messaging"
+	conceteCards "github.com/eyalkenig/suchef-bot/server/interaction/cards"
 )
 
 const maxItemsToSelect = 10
 
-func GetSelectedThemeQuickReplies(repository repositories.ICourseRepository,
+func GetSelectedThemeCourses(repository repositories.ICourseRepository,
 	selectedTheme *models.Theme,
-	userContext context.IUserContext) (map[string]string, error) {
+	userContext context.IUserContext) ([]messaging.ICard, error) {
 	courses, err := selectors.GetByTheme(repository, userContext, selectedTheme, maxItemsToSelect)
 	if err != nil {
 		return nil, err
@@ -22,10 +25,23 @@ func GetSelectedThemeQuickReplies(repository repositories.ICourseRepository,
 		//TODO: what does this means bazel??
 		return nil, errors.New("Not found courses")
 	}
-	quickReplies := make(map[string]string)
+
+	var cards []messaging.ICard
 
 	for _, course := range courses {
-		quickReplies[course.Name] = course.ImageURL
+		courseCard := conceteCards.NewCourse(course.ID, course.Name, course.Description, course.ImageURL)
+		cards = append(cards, courseCard)
 	}
-	return quickReplies, nil
+	return cards, nil
+}
+
+func GetAlterantivesCourses() map[string]string {
+	others := make(map[string]string)
+
+	return others
+
+	others["משהו אחר"] = "i_want_something_else"
+	others["!תבחרי את"] = "pick_something_for_me"
+
+	return others
 }

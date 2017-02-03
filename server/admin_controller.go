@@ -32,14 +32,21 @@ func (admin *AdminController) AddCourse(accountID int64, course *models.Course) 
 	}
 	for _, sensitivityName := range course.Tags[models.SensitivityMetadataTypeName] {
 		sensitivity, _ := models.GetSensitivityByName(sensitivityName)
-		admin.dataProvider.AddCourseMetadata(newCourseID, models.SensitivityMetadataTypeID, sensitivity.ID)
+		err = admin.dataProvider.AddCourseMetadata(newCourseID, models.SensitivityMetadataTypeID, sensitivity.ID)
 		if err != nil {
 			return err
 		}
 	}
 	for _, themeName := range course.Tags[models.ThemeMetadataTypeName] {
 		theme, _ := models.GetThemeByName(themeName)
-		admin.dataProvider.AddCourseMetadata(newCourseID, models.ThemeMetadataTypeID, theme.ID)
+		err = admin.dataProvider.AddCourseMetadata(newCourseID, models.ThemeMetadataTypeID, theme.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, ingredient := range course.Ingredients {
+		err = admin.dataProvider.AddCourseIngredient(newCourseID, ingredient.Name)
 		if err != nil {
 			return err
 		}

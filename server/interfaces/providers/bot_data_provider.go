@@ -14,6 +14,8 @@ type IBotDataProvider interface {
 
 	FetchUserPreference(userID int64) (dietID, sensitivityID int64, err error)
 
+	FetchCourseName(courseID int64) (string, error)
 	FetchCourses(accountID int64) ([]*models.Course, error)
+	FetchIngredients(courseID int64) ([]*models.Ingredient, error)
 	Close() error
 }

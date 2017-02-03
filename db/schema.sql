@@ -121,3 +121,13 @@ CREATE TABLE `courses_metadata` (
   CONSTRAINT `courses_id_fk` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
   CONSTRAINT `metadata_type_id_fk` FOREIGN KEY (`metadata_type_id`) REFERENCES `metadata_types` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- INGREDIENTS
+
+CREATE TABLE `ingredients` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` int(11) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `ingredients_course_id_fk` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

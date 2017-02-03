@@ -60,6 +60,7 @@ type addCourseRequest struct {
 	Diets         []*string
 	Sensitivities []*string
 	Themes        []*string
+	Ingredients   []*models.Ingredient
 }
 
 func (suchefServer *SuchefServer) AddCourse(w http.ResponseWriter, r *http.Request) {
@@ -88,6 +89,8 @@ func (suchefServer *SuchefServer) AddCourse(w http.ResponseWriter, r *http.Reque
 	newCourse.Tags[models.DietMetadataTypeName] = params.Diets
 	newCourse.Tags[models.SensitivityMetadataTypeName] = params.Sensitivities
 	newCourse.Tags[models.ThemeMetadataTypeName] = params.Themes
+
+	newCourse.Ingredients = params.Ingredients
 
 	error = suchefServer.adminController.AddCourse(accountID, newCourse)
 	if error != nil {

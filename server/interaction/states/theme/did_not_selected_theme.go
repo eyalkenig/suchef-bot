@@ -1,6 +1,7 @@
 package theme
 
 import (
+	"github.com/eyalkenig/suchef-bot/server/models"
 	"github.com/eyalkenig/suchef-bot/server/interaction/context"
 	"github.com/eyalkenig/suchef-bot/server/interaction/interfaces"
 	"github.com/eyalkenig/suchef-bot/server/interfaces/providers"
@@ -31,16 +32,21 @@ func (state *DidNotSelectedTheme) ID() int64 {
 }
 
 func (state *DidNotSelectedTheme) Act() (err error) {
-	err = state.messengerProvider.SendSimpleMessage(state.userContext.GetExternalUserID(), "יאללה אני כבר אחליט לבד!")
-	if err != nil {
-		return err
-	}
 	externalUserID := state.userContext.GetExternalUserID()
-	err = state.messengerProvider.SendSimpleMessage(externalUserID, "דג בקארי")
+
+	err = state.messengerProvider.SendSimpleMessage(externalUserID, "יאללה אני כבר אחליט לבד!")
+	t := "moroccasian"
+	theme, err := models.GetThemeByName(&t)
 	if err != nil {
 		return err
 	}
-	return state.messengerProvider.SendImage(externalUserID, "https://s28.postimg.org/u1hmefp1p/malai_not_grained.jpg")
+	cards, err := GetSelectedThemeCourses(state.courseRepository, theme, state.userContext)
+
+	if err != nil {
+		return err
+	}
+	alternatives := GetAlterantivesCourses()
+	return state.messengerProvider.SendGenericTemplate(externalUserID, alternatives, cards)
 }
 
 func (state *DidNotSelectedTheme) Next(input interfaces.IStateInput) (nextState interfaces.IState, err error) {
